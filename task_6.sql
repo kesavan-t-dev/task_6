@@ -5,9 +5,7 @@ GO
 --INSERT 
 
 -- Drop the procedure if it already exists
-IF OBJECT_ID('dbo.sp_insert_task', 'U') IS NOT NULL
-    DROP PROCEDURE sp_insert_task
-GO
+DROP PROCEDURE IF EXISTS dbo.sp_insert_task;
 --in insert we use system procedure to create/insert the values to the system procedures
 
 CREATE PROCEDURE sp_insert_task
@@ -61,7 +59,7 @@ EXEC sp_update_task_status 3, 'in progress';
 
 --After
 select * from task;
-
+-- Drop if already exists
 DROP PROCEDURE IF EXISTS dbo.sp_delete_task;
 --DELETE 
 CREATE PROCEDURE sp_delete_task
