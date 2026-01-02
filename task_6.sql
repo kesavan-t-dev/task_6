@@ -2,18 +2,12 @@
 use kesavan_db
 GO
 
-/*
-Create Crud using User Defined Functions
-
-1. Do The CRUD Operations to Insert, Update, Delete, Select the Data in Task Table.
-*/
-
---display task table;  
-select * from task
-
 --INSERT 
 
-drop procedure sp_insert_task
+-- Drop the procedure if it already exists
+IF OBJECT_ID('dbo.sp_insert_task', 'U') IS NOT NULL
+    DROP PROCEDURE sp_insert_task
+GO
 --in insert we use system procedure to create/insert the values to the system procedures
 
 CREATE PROCEDURE sp_insert_task
@@ -26,6 +20,7 @@ CREATE PROCEDURE sp_insert_task
     @project_id INT
 AS
 BEGIN
+
     INSERT INTO task (task_name, descriptions, starts_date, due_date, prioritys, statuss, project_id)
     VALUES (@task_name, @descriptions, @starts_date, @due_date, @prioritys, @statuss, @project_id);
 END
@@ -41,8 +36,54 @@ select * from project
 --WHERE task_name = 'New Task'
 
 
---Read function
 -- we use use defined function for to show the data it can only readable only 
+
+--UPDATE
+
+-- Drop the procedure if it already exists
+--DROP PROCEDURE IF EXISTS dbo.sp_update_task_status;
+
+CREATE PROCEDURE sp_update_task_status
+    @task_id INT,
+    @statuss VARCHAR(70)
+AS
+BEGIN
+    UPDATE task
+    SET statuss = @statuss
+    WHERE task_id = @task_id;
+END
+GO
+
+--Before
+select * from task;
+--execute the update task status
+EXEC sp_update_task_status 3, 'in progress';
+
+--After
+select * from task;
+
+DROP PROCEDURE IF EXISTS dbo.sp_delete_task;
+--DELETE 
+CREATE PROCEDURE sp_delete_task
+    @task_id INT
+
+AS
+BEGIN 
+    DELETE 
+    FROM task
+    WHERE task_id = @task_id
+END
+GO
+
+--execute the delete task using id
+EXEC sp_delete_task 3;
+
+select * from task
+
+--SELECT
+-- Drop function is already exists
+
+--DROP FUNCTION IF EXISTS dbo.project_details;
 
 CREATE FUNCTION project_details(@project_id INT)
 RETURNS TABLE
@@ -55,5 +96,3 @@ RETURN
 );
 
 SELECT * FROM project_details(4)
-
-
